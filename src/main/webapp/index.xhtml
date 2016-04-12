@@ -1,0 +1,89 @@
+<f:view xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ng="http://xmlns.jcp.org/jsf/passthrough">
+	<h:head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>Game Of Three</title>
+		<style>
+body {
+	font-size: 14px;
+}
+</style>
+	</h:head>
+	<h:body>
+
+		<script type="text/javascript"
+			src="//cdn.jsdelivr.net/jquery/1.11.2/jquery.min.js"></script>
+		<script type="text/javascript"
+			src="//cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+		<script type="text/javascript"
+			src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+
+		<h:form id="gameForm">
+			<p:panelGrid columns="1">
+				<h:panelGroup>
+					<p:commandButton id="playerButton" value="JoinGame"
+						update="gameForm:gameStatusPanel, gameForm:playerButton"
+						action="#{gameRoomBean.joinGame()}"
+						disabled="#{gameRoomBean.playerStatus}"></p:commandButton>
+					<p:commandButton id="startGameButton" value="StartGame/Refresh"
+						action="#{gameRoomBean.startGame()}" ></p:commandButton>
+				</h:panelGroup>
+				<h:panelGroup id="gameStatusPanel">
+				#{gameRoomBean.status}
+			</h:panelGroup>
+
+			</p:panelGrid>
+			<h3>Messages:</h3>
+			<div>
+				<ol id="messages"></ol>
+			</div>
+			<p:remoteCommand name="updateGameStatus"
+				update="gameForm:gameStatusPanel" />
+		</h:form>
+
+		<script type="text/javascript">
+			$(document).ready(
+					function() {
+						var messageList = $("#messages");
+						//var messageList = document.getElementById("gameForm:gameStatusPanel");
+						var socket = new SockJS('/gameofthree/gamesocket');
+						var stompClient = Stomp.over(socket);
+						stompClient.connect({}, function(frame) {
+							// subscribe to the /topic/entries endpoint which feeds newly added messages
+							stompClient.subscribe('/topic/gamestatus',
+									function(data) {
+										var body = data.body;
+										var message = JSON.parse(body);
+										var value = message.value;
+										if (value == 1) {
+											messageList.append("<li>"
+													+ 'Move By : '
+													+ message.moveBy
+													+ ' | Added : '
+													+ message.added
+													+ ' | Resulting Value : '
+													+ value + " WIN!!!"
+													+ "</li>");
+										} else {
+											messageList.append("<li>"
+													+ 'Move By : '
+													+ message.moveBy
+													+ ' | Added : '
+													+ message.added
+													+ ' | Resulting Value : '
+													+ value + "</li>");
+										}
+									});
+						});
+
+					});
+		</script>
+
+	</h:body>
+</f:view>
