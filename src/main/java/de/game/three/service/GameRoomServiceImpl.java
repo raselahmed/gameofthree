@@ -94,7 +94,7 @@ public class GameRoomServiceImpl implements GameRoomService {
   private void sendGameActionStatus(final GameActionDTO gameActionDTO) {
     messagingTemplate.convertAndSend("/topic/gamestatus", gameActionDTO);
     try {
-      Thread.sleep(1000);// 1000 milliseconds is one second.
+      Thread.sleep(500);// 1000 milliseconds is one second.
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
     }

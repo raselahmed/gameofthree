@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+extraProperties=sonar.doxygen.generateCallerGraphs\=true\r\nsonar.host.url\=http\://denurvbox-rdc.corp.sigos.net\:9012\r\nsonar.jdbc.password\=sonar\r\nsonar.doxygen.generateClassGraphs\=true\r\nsonar.jdbc.username\=sonar\r\nsonar.jdbc.url\=jdbc\:mysql\://172.17.13.76\:3306/sonar?useUnicode\=true&characterEncoding\=utf8\r\nsonar.doxygen.generateCallGraphs\=true\r\nsonar.doxygen.generateDocumentation\=enable
+projectKey=org.springframework\:gameofthree
+serverUrl=http\://172.17.13.76\:9012
+version=2
